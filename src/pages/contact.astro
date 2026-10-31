@@ -1,0 +1,75 @@
+---
+import Layout from '../Layouts/Layouts.astro';
+import BookingForm from '../components/BookingForm.astro';
+import restaurant from '../data/resturant.json';
+---
+
+<Layout
+  title={`Contact & Reservations | ${restaurant.name}`}
+  description={`Contact ${restaurant.name} or reserve a table in ${restaurant.address.city}.`}
+>
+  <section class="contact-page">
+    <header class="page-heading">
+      <span class="eyebrow">We'd love to see you</span>
+      <h1>Come hungry.<br /><em>Leave happy.</em></h1>
+      <p>Make a reservation or get in touch. We look forward to welcoming you.</p>
+    </header>
+
+    <div class="contact-layout">
+      <section class="booking" id="book" aria-labelledby="booking-title">
+        <span class="eyebrow">Save your seat</span>
+        <h2 id="booking-title">Book your table</h2>
+        <p>Share your details and our team will be in touch to confirm your reservation.</p>
+        <BookingForm />
+      </section>
+
+      <aside class="contact-card">
+        <span class="eyebrow">Find us</span>
+        <h2>Visit {restaurant.name}</h2>
+        <div class="contact-detail">
+          <span class="detail-icon" aria-hidden="true">⌖</span>
+          <div><strong>Address</strong><p>{restaurant.address.street}<br />{restaurant.address.city}, {restaurant.address.state} {restaurant.address.postalCode}</p></div>
+        </div>
+        <div class="contact-detail">
+          <span class="detail-icon" aria-hidden="true">◷</span>
+          <div><strong>Opening hours</strong><p>Monday – Friday<br />{restaurant.timings.weekdays}<br /><br />Saturday – Sunday<br />{restaurant.timings.weekends}</p></div>
+        </div>
+        <div class="contact-detail">
+          <span class="detail-icon" aria-hidden="true">☎</span>
+          <div><strong>Call us</strong><p><a href={`tel:${restaurant.phone}`}>{restaurant.phone}</a></p></div>
+        </div>
+        <a class="directions-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.address.street}, ${restaurant.address.city}, ${restaurant.address.state}`)}`} target="_blank" rel="noreferrer">
+          Get directions <span aria-hidden="true">↗</span>
+        </a>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  :global(body) { background: #fffdfa; }
+  .contact-page { width: min(100% - 3rem, 1120px); margin: 0 auto; padding: 4rem 0 5rem; }
+  .page-heading { max-width: 700px; margin: 0 auto 2.5rem; text-align: center; }
+  .eyebrow { color: #d9652d; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
+  .page-heading h1 { margin: 0.75rem 0; color: #1d211c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.8rem, 7vw, 4.3rem); font-weight: 600; letter-spacing: -0.055em; line-height: 1.02; }
+  .page-heading h1 em { color: #d9652d; font-weight: 500; }
+  .page-heading > p { color: #77736c; font-size: 0.92rem; line-height: 1.7; }
+  .contact-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr); align-items: start; gap: 2rem; }
+  .booking { padding: clamp(1.25rem, 3vw, 2.25rem); border: 1px solid #eee8df; border-radius: 16px; background: #fff; box-shadow: 0 12px 32px #42301b0a; }
+  .booking h2, .contact-card h2 { margin: 0.5rem 0; color: #25261f; font-family: Georgia, 'Times New Roman', serif; font-size: 1.8rem; }
+  .booking > p { margin: 0 0 1.25rem; color: #77736c; font-size: 0.86rem; line-height: 1.65; }
+  .booking :global(form) { max-width: none; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+  .contact-card { padding: clamp(1.5rem, 3vw, 2.25rem); border-radius: 16px; background: #f7f1e8; }
+  .contact-card h2 { margin-bottom: 1.6rem; }
+  .contact-detail { display: flex; align-items: flex-start; gap: 0.9rem; margin: 1.4rem 0; }
+  .detail-icon { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border: 1px solid #e8dfd3; border-radius: 50%; background: #fffdfa; color: #435537; font-size: 1.2rem; }
+  .contact-detail strong { color: #292a25; font-size: 0.86rem; }
+  .contact-detail p { margin: 0.3rem 0 0; color: #6a6862; font-size: 0.82rem; line-height: 1.7; }
+  .contact-detail a { color: inherit; text-decoration-color: #d7a07f; text-underline-offset: 3px; }
+  .directions-link { display: inline-flex; gap: 0.5rem; margin-top: 0.5rem; padding: 0.85rem 1rem; border-radius: 6px; background: #30471f; color: #fff; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; }
+  .directions-link:hover { background: #1f3413; }
+  @media (max-width: 760px) {
+    .contact-page { width: min(100% - 2.25rem, 1120px); padding: 3rem 0; }
+    .contact-layout { grid-template-columns: 1fr; }
+  }
+</style>

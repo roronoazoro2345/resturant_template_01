@@ -1,16 +1,236 @@
 ---
+import Layout from '../Layouts/Layouts.astro';
+import BookingForm from '../components/BookingForm.astro';
+import restaurant from '../data/resturant.json';
+import menu from '../data/menu.json';
+
+const featuredDishes = menu.flatMap((category) => category.items).slice(0, 4);
+const dishImages = [
+  'photo-1473093295043-cdd812d0e601',
+  'photo-1544025162-d76694265947',
+  'photo-1512621776951-a57141f2eefd',
+  'photo-1563805042-7684c019e1cb',
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title={`${restaurant.name} | Fine Dining & Reservations`}
+  description={`${restaurant.tagline}. Discover the menu and reserve a table at ${restaurant.name} in ${restaurant.address.city}.`}
+>
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Good food | Good mood</span>
+      <h1>Delicious food<br />for <em>every mood</em></h1>
+      <p>
+        Experience a perfect blend of taste, quality, and ambience. Every dish
+        is crafted with love and passion to bring joy to your table.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/menu">Explore menu <span aria-hidden="true">→</span></a>
+        <a class="button button-outline" href="#book">Book a table</a>
+      </div>
+      <div class="hero-values">
+        <span><b aria-hidden="true">✦</b> Fresh ingredients</span>
+        <span><b aria-hidden="true">♨</b> Expert chefs</span>
+        <span><b aria-hidden="true">♡</b> Made with love</span>
+      </div>
+    </div>
+    <div class="hero-image-wrap">
+      <img
+        class="hero-image"
+        src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=85"
+        alt="Freshly prepared restaurant dish with seasonal ingredients"
+        fetchpriority="high"
+      />
+      <div class="dish-count"><strong>30<span>+</span></strong><small>signature<br />dishes</small></div>
+    </div>
+  </section>
+
+  <section class="about-strip">
+    <div class="about-photo">
+      <img
+        src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=85"
+        alt={`The dining room at ${restaurant.name}`}
+        loading="lazy"
+      />
+      <span class="years-badge"><strong>10+</strong> years of<br />experience</span>
+    </div>
+    <div class="about-intro">
+      <span class="eyebrow">Welcome to {restaurant.name}</span>
+      <h2>Good Food,<br />Good <em>Life</em></h2>
+      <p>
+        We believe great food brings people together. Our menu is inspired by
+        bold flavours and prepared with fresh ingredients for a dining
+        experience worth sharing.
+      </p>
+      <a class="learn-link" href="/about">Learn more about us <span aria-hidden="true">→</span></a>
+    </div>
+    <ul class="quality-list">
+      <li><span aria-hidden="true">♧</span><div><strong>Quality</strong><small>Fresh ingredients</small></div></li>
+      <li><span aria-hidden="true">♨</span><div><strong>Skilled chefs</strong><small>Made with care</small></div></li>
+      <li><span aria-hidden="true">⌂</span><div><strong>Cozy ambience</strong><small>A place to unwind</small></div></li>
+    </ul>
+  </section>
+
+  <section class="specials-section">
+    <div class="section-heading">
+      <span class="eyebrow">Chef's special</span>
+      <h2>Our Popular Dishes</h2>
+      <p>Made fresh and served with a little extra love.</p>
+    </div>
+    <div class="dish-grid">
+      {featuredDishes.map((dish, index) => (
+        <article class="dish-card">
+          <img
+            src={`https://images.unsplash.com/${dishImages[index % dishImages.length]}?auto=format&fit=crop&w=700&q=80`}
+            alt={dish.name}
+            loading="lazy"
+          />
+          <div class="dish-content">
+            <div class="dish-title-row">
+              <h3>{dish.name}</h3>
+              <span class={`diet-dot ${dish.isVeg ? 'veg' : ''}`} aria-label={dish.isVeg ? 'Vegetarian' : 'Non-vegetarian'}></span>
+            </div>
+            <p>{dish.description}</p>
+            <strong class="dish-price">{dish.price}</strong>
+          </div>
+        </article>
+      ))}
+    </div>
+    <a class="view-menu" href="/menu">View full menu <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section class="reservation-strip" id="book">
+    <div>
+      <span class="eyebrow">Plan your visit</span>
+      <h2>Make it a meal to remember</h2>
+      <p>Reserve your table and let us take care of the rest.</p>
+    </div>
+    <a class="button button-primary" href="/contact#book">Book a table <span aria-hidden="true">→</span></a>
+  </section>
+</Layout>
+
+<style>
+  :global(body) { background: #fffdfa; }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+    width: min(100% - 3rem, 1200px);
+    min-height: 540px;
+    margin: 0 auto;
+    padding: 3rem 0 4rem;
+  }
+  .hero-copy { max-width: 510px; }
+  .eyebrow {
+    color: #d9652d;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .hero h1, .about-intro h2, .section-heading h2, .reservation-strip h2 {
+    margin: 1rem 0;
+    color: #1d211c;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: -0.055em;
+    line-height: 1.05;
+  }
+  .hero h1 { font-size: clamp(3rem, 6vw, 5.2rem); }
+  .hero h1 em, .about-intro h2 em { color: #d9652d; font-weight: 500; }
+  .hero-copy > p, .about-intro p, .section-heading p, .reservation-strip p {
+    color: #6a6862;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+  .hero-copy > p { max-width: 420px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 1.6rem; }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    min-height: 46px;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: transform 160ms ease, background 160ms ease;
+  }
+  .button:hover { transform: translateY(-2px); }
+  .button-primary { background: #d9652d; color: white; }
+  .button-primary:hover { background: #bd5125; }
+  .button-outline { border-color: #d9a181; color: #39342e; }
+  .button-outline:hover { background: #fbf1e9; }
+  .hero-values { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 2rem; }
+  .hero-values span { display: flex; align-items: center; gap: 0.45rem; color: #58554e; font-size: 0.76rem; }
+  .hero-values b { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid #e8dfd3; border-radius: 50%; color: #435537; font-size: 1rem; }
+  .hero-image-wrap { position: relative; }
+  .hero-image { display: block; width: 100%; height: clamp(340px, 42vw, 500px); object-fit: cover; border-radius: 48% 48% 46% 46%; }
+  .dish-count { position: absolute; top: 8%; right: 2%; display: flex; width: 112px; height: 112px; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #f0e2d3; border-radius: 50%; background: #fffdfa; color: #282820; text-align: center; box-shadow: 0 8px 24px #42301b18; }
+  .dish-count strong { font-family: Georgia, 'Times New Roman', serif; font-size: 2rem; }
+  .dish-count strong span { color: #d9652d; font-size: 1.2rem; }
+  .dish-count small { font-size: 0.7rem; line-height: 1.25; }
+  .about-strip { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(175px, 0.55fr); align-items: center; gap: clamp(2rem, 4vw, 4rem); padding: 3rem max(1.5rem, calc((100% - 1200px) / 2)); border-block: 1px solid #f0ece5; }
+  .about-photo { position: relative; }
+  .about-photo img { display: block; width: 100%; height: 300px; object-fit: cover; border-radius: 18px; }
+  .years-badge { position: absolute; right: -12px; bottom: 14px; padding: 0.9rem 1.1rem; border-radius: 12px; background: #d9652d; color: #fff; font-size: 0.72rem; line-height: 1.35; text-align: center; }
+  .years-badge strong { display: block; font-family: Georgia, 'Times New Roman', serif; font-size: 1.7rem; }
+  .about-intro h2 { font-size: clamp(2.4rem, 4vw, 3.2rem); }
+  .learn-link, .view-menu { display: inline-flex; gap: 0.65rem; margin-top: 0.8rem; color: #30471f; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
+  .quality-list { display: grid; gap: 1.2rem; margin: 0; padding: 0; list-style: none; }
+  .quality-list li { display: flex; align-items: center; gap: 0.85rem; }
+  .quality-list li > span { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; border: 1px solid #efe8dc; border-radius: 50%; background: #faf6ef; color: #405736; font-size: 1.4rem; }
+  .quality-list strong, .quality-list small { display: block; }
+  .quality-list strong { color: #292a25; font-size: 0.85rem; }
+  .quality-list small { margin-top: 0.25rem; color: #77736c; font-size: 0.74rem; }
+  .specials-section { width: min(100% - 3rem, 1200px); margin: 0 auto; padding: 4rem 0; }
+  .section-heading { margin-bottom: 1.75rem; text-align: center; }
+  .section-heading h2 { margin: 0.5rem 0; font-size: clamp(2rem, 4vw, 2.8rem); }
+  .section-heading p { margin: 0; font-size: 0.86rem; }
+  .dish-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .dish-card { overflow: hidden; border: 1px solid #eee8df; border-radius: 13px; background: #fff; box-shadow: 0 8px 22px #42301b0a; }
+  .dish-card > img { display: block; width: 100%; height: 160px; object-fit: cover; }
+  .dish-content { padding: 0.85rem 1rem 1rem; }
+  .dish-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+  .dish-title-row h3 { margin: 0; color: #292a25; font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; }
+  .diet-dot { width: 10px; height: 10px; flex: 0 0 10px; margin-top: 4px; border: 1px solid #b74839; border-radius: 50%; }
+  .diet-dot.veg { border-color: #47723b; }
+  .diet-dot.veg::after { display: block; width: 4px; height: 4px; margin: 2px; border-radius: 50%; background: #47723b; content: ''; }
+  .dish-content p { min-height: 2.5em; margin: 0.55rem 0; color: #77736c; font-size: 0.75rem; line-height: 1.55; }
+  .dish-price { color: #d9652d; font-size: 0.88rem; }
+  .view-menu { display: flex; width: fit-content; margin: 1.5rem auto 0; color: #d9652d; }
+  .reservation-strip { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: min(100% - 3rem, 1200px); margin: 0 auto 4rem; padding: 2rem clamp(1.25rem, 4vw, 3rem); border-radius: 16px; background: #f7f1e8; }
+  .reservation-strip h2 { margin: 0.45rem 0; font-size: clamp(1.8rem, 3.5vw, 2.5rem); }
+  .reservation-strip p { margin: 0; font-size: 0.86rem; }
+  @media (max-width: 900px) {
+    .hero { min-height: auto; }
+    .about-strip { grid-template-columns: 1fr 1fr; }
+    .quality-list { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); }
+    .quality-list li { align-items: flex-start; flex-direction: column; }
+    .dish-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px) {
+    .hero { grid-template-columns: 1fr; width: min(100% - 2.25rem, 1200px); gap: 2rem; padding: 3rem 0; }
+    .hero h1 { font-size: clamp(3rem, 13vw, 4.3rem); }
+    .hero-image { height: 320px; border-radius: 24px; }
+    .dish-count { width: 90px; height: 90px; }
+    .dish-count strong { font-size: 1.6rem; }
+    .about-strip { grid-template-columns: 1fr; padding: 2.5rem 1.15rem; }
+    .about-photo img { height: 250px; }
+    .quality-list { grid-template-columns: 1fr; }
+    .quality-list li { align-items: center; flex-direction: row; }
+    .specials-section { width: min(100% - 2.25rem, 1200px); padding: 3rem 0; }
+    .dish-grid { gap: 0.75rem; }
+    .dish-card > img { height: 125px; }
+    .dish-content { padding: 0.75rem; }
+    .dish-title-row h3 { font-size: 0.9rem; }
+    .reservation-strip { align-items: flex-start; flex-direction: column; width: min(100% - 2.25rem, 1200px); margin-bottom: 2.5rem; }
+  }
+</style>

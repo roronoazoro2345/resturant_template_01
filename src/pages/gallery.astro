@@ -1,0 +1,110 @@
+---
+import Layout from '../Layouts/Layouts.astro';
+import restaurant from '../data/resturant.json';
+
+const photos = [
+  {
+    src: 'photo-1414235077428-338989a2e8c0',
+    alt: 'Warmly lit restaurant dining room set for dinner',
+    label: 'Our dining room',
+    shape: 'tall',
+  },
+  {
+    src: 'photo-1547592180-85f173990554',
+    alt: 'A colourful freshly prepared meal',
+    label: 'Fresh from our kitchen',
+    shape: '',
+  },
+  {
+    src: 'photo-1559339352-11d035aa65de',
+    alt: 'Friends sharing dinner at a restaurant',
+    label: 'Good food, shared',
+    shape: '',
+  },
+  {
+    src: 'photo-1544025162-d76694265947',
+    alt: 'Grilled dish served with fresh herbs',
+    label: 'Chef favorites',
+    shape: '',
+  },
+  {
+    src: 'photo-1517248135467-4c7edcad34c4',
+    alt: 'Restaurant interior with inviting tables and warm lighting',
+    label: 'A place to unwind',
+    shape: 'wide',
+  },
+  {
+    src: 'photo-1565299624946-b28f40a0ae38',
+    alt: 'Freshly baked pizza topped with herbs and vegetables',
+    label: 'Made with care',
+    shape: '',
+  },
+];
+---
+
+<Layout
+  title={`Gallery | ${restaurant.name}`}
+  description={`A look inside ${restaurant.name}: our dishes, dining room, and hospitality in ${restaurant.address.city}.`}
+>
+  <section class="gallery-page">
+    <header class="gallery-heading">
+      <span class="eyebrow">A taste of the experience</span>
+      <h1>Moments made<br /><em>around the table</em></h1>
+      <p>Take a peek at the food, place, and people that make every visit special.</p>
+    </header>
+
+    <div class="photo-grid">
+      {photos.map((photo) => (
+        <figure class:list={['photo-card', photo.shape]}>
+          <img
+            src={`https://images.unsplash.com/${photo.src}?auto=format&fit=crop&w=1000&q=85`}
+            alt={photo.alt}
+            loading="lazy"
+          />
+          <figcaption>{photo.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <aside class="gallery-cta">
+      <div>
+        <span class="eyebrow">Your table is waiting</span>
+        <h2>Come make a memory with us.</h2>
+      </div>
+      <a href="/contact#book">Reserve a table <span aria-hidden="true">→</span></a>
+    </aside>
+  </section>
+</Layout>
+
+<style>
+  :global(body) { background: #fffdfa; }
+  .gallery-page { width: min(100% - 3rem, 1200px); margin: 0 auto; padding: 4rem 0 5rem; }
+  .gallery-heading { max-width: 700px; margin: 0 auto 2.5rem; text-align: center; }
+  .eyebrow { color: #d9652d; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
+  .gallery-heading h1 { margin: 0.75rem 0; color: #1d211c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.8rem, 7vw, 4.3rem); font-weight: 600; letter-spacing: -0.055em; line-height: 1.02; }
+  .gallery-heading h1 em { color: #d9652d; font-weight: 500; }
+  .gallery-heading p { color: #77736c; font-size: 0.92rem; line-height: 1.7; }
+  .photo-grid { display: grid; grid-auto-flow: dense; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 220px; gap: 1rem; }
+  .photo-card { position: relative; overflow: hidden; min-width: 0; margin: 0; border-radius: 14px; background: #f2ece3; }
+  .photo-card.tall { grid-row: span 2; }
+  .photo-card.wide { grid-column: span 2; }
+  .photo-card img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 450ms ease; }
+  .photo-card:hover img { transform: scale(1.045); }
+  .photo-card::after { position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, #171710a8); content: ''; pointer-events: none; }
+  .photo-card figcaption { position: absolute; z-index: 1; bottom: 1rem; left: 1.1rem; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-size: 1.2rem; }
+  .gallery-cta { display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-top: 2.5rem; padding: 2rem clamp(1.25rem, 4vw, 3rem); border-radius: 16px; background: #f7f1e8; }
+  .gallery-cta h2 { margin: 0.5rem 0 0; color: #20231c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.5rem, 3vw, 2rem); }
+  .gallery-cta > a { display: inline-flex; align-items: center; gap: 0.6rem; flex: 0 0 auto; padding: 0.9rem 1.15rem; border-radius: 6px; background: #d9652d; color: #fff; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; }
+  .gallery-cta > a:hover { background: #bd5125; }
+  @media (max-width: 760px) {
+    .gallery-page { width: min(100% - 2.25rem, 1200px); padding: 3rem 0; }
+    .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 180px; }
+    .photo-card.tall { grid-row: span 2; }
+  }
+  @media (max-width: 480px) {
+    .photo-grid { grid-auto-rows: 150px; gap: 0.65rem; }
+    .photo-card.wide { grid-column: span 1; }
+    .photo-card figcaption { bottom: 0.7rem; left: 0.75rem; font-size: 1rem; }
+    .gallery-cta { align-items: flex-start; flex-direction: column; }
+  }
+</style>

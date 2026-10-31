@@ -1,0 +1,53 @@
+[
+  {
+    "category": "Starters",
+    "items": [
+      {
+        "name": "Paneer Tikka Angaare",
+        "price": "₹280",
+        "description": "Char-grilled cottage cheese cubes infused with aromatic spices.",
+        "isVeg": true
+      },
+      {
+        "name": "Tandoori Chicken Wings",
+        "price": "₹340",
+        "description": "Crispy roasted wings tossed in spicy house glaze.",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "category": "Mains",
+    "items": [
+      {
+        "name": "Dal Makhani Handi",
+        "price": "₹310",
+        "description": "Slow-cooked black lentils simmered with churned butter and cream.",
+        "isVeg": true
+      },
+      {
+        "name": "Butter Chicken Deluxe",
+        "price": "₹420",
+        "description": "Smoked tandoori chicken cooked in a rich, velvety tomato sauce.",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "category": "Desserts & Drinks",
+    "items": [
+      {
+        "name": "Gulab Jamun with Rabri",
+        "price": "₹160",
+        "description": "Warm golden milk dumplings served with reduced saffron milk.",
+        "isVeg": true
+      },
+      {
+        "name": "Masala Chaas",
+        "price": "₹90",
+        "description": "Chilled spiced buttermilk with roasted cumin and fresh coriander.",
+        "isVeg": true
+      }
+    ]
+  }
+]

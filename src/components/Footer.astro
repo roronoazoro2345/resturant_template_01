@@ -1,0 +1,44 @@
+---
+import resturant from '../data/resturant.json';
+---
+
+<footer class="bg-neutral-900 text-neutral-300 pt-16 pb-12 border-t border-neutral-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-neutral-800">
+    <!-- Brand Info -->
+    <div>
+      <h3 class="text-xl font-serif font-bold text-white mb-3">{resturant.name}</h3>
+      <p class="text-sm text-neutral-400 leading-relaxed mb-4">{resturant.tagline}</p>
+      <p class="text-sm text-neutral-400">
+        {resturant.address.street}, {resturant.address.city}, {resturant.address.state} - {resturant.address.postalCode}
+      </p>
+    </div>
+
+    <!-- Opening Hours -->
+    <div>
+      <h4 class="text-base font-semibold text-white uppercase tracking-wider mb-3">Opening Hours</h4>
+      <ul class="text-sm space-y-2 text-neutral-400">
+        <li><strong class="text-neutral-200">Mon – Fri:</strong> {resturant.timings.weekdays}</li>
+        <li><strong class="text-neutral-200">Sat – Sun:</strong> {resturant.timings.weekends}</li>
+      </ul>
+    </div>
+
+    <!-- Contact & Reservations -->
+    <div>
+      <h4 class="text-base font-semibold text-white uppercase tracking-wider mb-3">Direct Contact</h4>
+      <p class="text-sm text-neutral-400 mb-1">Phone: <a href={`tel:${resturant.phone}`} class="hover:text-amber-500">{resturant.phone}</a></p>
+      <p class="text-sm text-neutral-400 mb-4">Email: <a href={`mailto:${resturant.email}`} class="hover:text-amber-500">{resturant.email}</a></p>
+      <a 
+        href={`https://wa.me/${resturant.whatsapp}`} 
+        target="_blank" 
+        class="inline-flex items-center text-xs font-semibold uppercase tracking-wider px-3.5 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded border border-neutral-700 transition"
+      >
+        Chat on WhatsApp →
+      </a>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+    <p>© {new Date().getFullYear()} {resturant.name}. All rights reserved.</p>
+    <p>Designed for fast table reservations & local discovery.</p>
+  </div>
+</footer>

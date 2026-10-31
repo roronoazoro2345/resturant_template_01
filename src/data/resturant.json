@@ -1,0 +1,19 @@
+{
+  "name": "The Spice Route Bistro",
+  "tagline": "Authentic Flavors, Warm Hospitality",
+  "phone": "+91 98765 43210",
+  "whatsapp": "919876543210",
+  "email": "contact@spiceroutebistro.com",
+  "address": {
+    "street": "124, 100 Feet Road, Indiranagar",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "postalCode": "560038",
+    "country": "India"
+  },
+  "timings": {
+    "weekdays": "12:00 PM – 11:00 PM",
+    "weekends": "12:00 PM – 11:30 PM"
+  },
+  "web3forms_key": "YOUR_ACCESS_KEY_HERE"
+}
