@@ -50,8 +50,10 @@ import resturant from '../data/resturant.json';
   </div>
 
   <div id="booking-captcha-container" class="hidden">
-    <p class="mb-2 text-sm text-stone-600">Complete this CAPTCHA to continue with your reservation.</p>
-    <div class="h-captcha" data-captcha="true"></div>
+    <label for="booking-captcha-answer" class="mb-1.5 block text-sm font-semibold text-stone-700">
+      Solve <span id="booking-captcha-question"></span>
+    </label>
+    <input id="booking-captcha-answer" type="number" inputmode="numeric" min="0" step="1" autocomplete="off" class="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20" />
   </div>
   <p id="booking-captcha-status" class="text-sm text-red-700" role="status" aria-live="polite"></p>
 
@@ -63,37 +65,48 @@ import resturant from '../data/resturant.json';
 <script>
   const form = document.querySelector<HTMLFormElement>('#booking-form');
   const captchaContainer = document.querySelector<HTMLElement>('#booking-captcha-container');
+  const captchaQuestion = document.querySelector<HTMLElement>('#booking-captcha-question');
+  const captchaAnswer = document.querySelector<HTMLInputElement>('#booking-captcha-answer');
   const captchaStatus = document.querySelector<HTMLElement>('#booking-captcha-status');
 
-  if (!form || !captchaContainer || !captchaStatus) {
+  if (!form || !captchaContainer || !captchaQuestion || !captchaAnswer || !captchaStatus) {
     throw new Error('Booking form CAPTCHA elements could not be found.');
   }
 
-  let captchaScriptRequested = false;
+  let expectedAnswer: number | undefined;
+  let captchaVerified = false;
 
   form.addEventListener('submit', (event) => {
-    const captchaResponse = form.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]');
-    if (captchaResponse?.value) {
+    if (captchaVerified) {
       return;
     }
 
     event.preventDefault();
-    captchaContainer.classList.remove('hidden');
-    captchaStatus.textContent = 'Complete the CAPTCHA below, then select Request a Reservation again.';
+    if (expectedAnswer === undefined) {
+      const firstNumber = Math.floor(Math.random() * 9) + 1;
+      const secondNumber = Math.floor(Math.random() * 9) + 1;
+      const isAddition = Math.random() < 0.5;
+      const largerNumber = Math.max(firstNumber, secondNumber);
+      const smallerNumber = Math.min(firstNumber, secondNumber);
+      const leftNumber = isAddition ? firstNumber : largerNumber;
+      const rightNumber = isAddition ? secondNumber : smallerNumber;
 
-    if (captchaScriptRequested) {
+      expectedAnswer = isAddition ? leftNumber + rightNumber : leftNumber - rightNumber;
+      captchaQuestion.textContent = `${leftNumber} ${isAddition ? '+' : '−'} ${rightNumber} = ?`;
+      captchaContainer.classList.remove('hidden');
+      captchaAnswer.required = true;
+      captchaStatus.textContent = 'Answer the question, then select Request a Reservation again.';
+      captchaAnswer.focus();
       return;
     }
 
-    captchaScriptRequested = true;
-    const script = document.createElement('script');
-    script.src = 'https://web3forms.com/client/script.js';
-    script.async = true;
-    script.defer = true;
-    script.addEventListener('error', () => {
-      captchaStatus.textContent = 'The CAPTCHA could not be loaded. Please check your connection and try again.';
-      captchaScriptRequested = false;
-    });
-    document.body.append(script);
+    if (Number(captchaAnswer.value) !== expectedAnswer) {
+      captchaStatus.textContent = 'That answer is not correct. Please try again.';
+      captchaAnswer.focus();
+      captchaAnswer.select();
+      return;
+    }
+
+    captchaVerified = true;
   });
 </script>
