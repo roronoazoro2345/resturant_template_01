@@ -61,6 +61,7 @@ import resturant from '../data/resturant.json';
     Request a Reservation <span aria-hidden="true">→</span>
   </button>
 </form>
+<p id="booking-submit-status" class="mx-auto mt-5 max-w-xl text-center text-sm font-semibold text-green-800" role="status" aria-live="polite" hidden></p>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('#booking-form');
@@ -68,45 +69,76 @@ import resturant from '../data/resturant.json';
   const captchaQuestion = document.querySelector<HTMLElement>('#booking-captcha-question');
   const captchaAnswer = document.querySelector<HTMLInputElement>('#booking-captcha-answer');
   const captchaStatus = document.querySelector<HTMLElement>('#booking-captcha-status');
+  const submitStatus = document.querySelector<HTMLElement>('#booking-submit-status');
 
-  if (!form || !captchaContainer || !captchaQuestion || !captchaAnswer || !captchaStatus) {
-    throw new Error('Booking form CAPTCHA elements could not be found.');
+  if (!form || !captchaContainer || !captchaQuestion || !captchaAnswer || !captchaStatus || !submitStatus) {
+    throw new Error('Booking form elements could not be found.');
   }
 
   let expectedAnswer: number | undefined;
   let captchaVerified = false;
 
-  form.addEventListener('submit', (event) => {
-    if (captchaVerified) {
-      return;
+  form.addEventListener('submit', async (event) => {
+    if (!captchaVerified) {
+      event.preventDefault();
+      if (expectedAnswer === undefined) {
+        const firstNumber = Math.floor(Math.random() * 9) + 1;
+        const secondNumber = Math.floor(Math.random() * 9) + 1;
+        const isAddition = Math.random() < 0.5;
+        const largerNumber = Math.max(firstNumber, secondNumber);
+        const smallerNumber = Math.min(firstNumber, secondNumber);
+        const leftNumber = isAddition ? firstNumber : largerNumber;
+        const rightNumber = isAddition ? secondNumber : smallerNumber;
+
+        expectedAnswer = isAddition ? leftNumber + rightNumber : leftNumber - rightNumber;
+        captchaQuestion.textContent = `${leftNumber} ${isAddition ? '+' : '−'} ${rightNumber} = ?`;
+        captchaContainer.classList.remove('hidden');
+        captchaAnswer.required = true;
+        captchaStatus.textContent = 'Answer the question, then select Request a Reservation again.';
+        captchaAnswer.focus();
+        return;
+      }
+
+      if (Number(captchaAnswer.value) !== expectedAnswer) {
+        captchaStatus.textContent = 'That answer is not correct. Please try again.';
+        captchaAnswer.focus();
+        captchaAnswer.select();
+        return;
+      }
+
+      captchaVerified = true;
     }
 
     event.preventDefault();
-    if (expectedAnswer === undefined) {
-      const firstNumber = Math.floor(Math.random() * 9) + 1;
-      const secondNumber = Math.floor(Math.random() * 9) + 1;
-      const isAddition = Math.random() < 0.5;
-      const largerNumber = Math.max(firstNumber, secondNumber);
-      const smallerNumber = Math.min(firstNumber, secondNumber);
-      const leftNumber = isAddition ? firstNumber : largerNumber;
-      const rightNumber = isAddition ? secondNumber : smallerNumber;
-
-      expectedAnswer = isAddition ? leftNumber + rightNumber : leftNumber - rightNumber;
-      captchaQuestion.textContent = `${leftNumber} ${isAddition ? '+' : '−'} ${rightNumber} = ?`;
-      captchaContainer.classList.remove('hidden');
-      captchaAnswer.required = true;
-      captchaStatus.textContent = 'Answer the question, then select Request a Reservation again.';
-      captchaAnswer.focus();
-      return;
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!submitButton) {
+      throw new Error('Booking form submit button could not be found.');
     }
 
-    if (Number(captchaAnswer.value) !== expectedAnswer) {
-      captchaStatus.textContent = 'That answer is not correct. Please try again.';
-      captchaAnswer.focus();
-      captchaAnswer.select();
-      return;
-    }
+    submitButton.disabled = true;
+    submitStatus.hidden = false;
+    submitStatus.classList.remove('text-red-700');
+    submitStatus.classList.add('text-green-800');
+    submitStatus.textContent = 'Submitting your response...';
 
-    captchaVerified = true;
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: new FormData(form),
+      });
+      const result: { success?: boolean } = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error('The booking form submission was not accepted.');
+      }
+
+      form.hidden = true;
+      submitStatus.textContent = 'Thanks for contacting us. Your response has been submitted.';
+    } catch {
+      submitButton.disabled = false;
+      submitStatus.classList.remove('text-green-800');
+      submitStatus.classList.add('text-red-700');
+      submitStatus.textContent = 'Sorry, your response could not be submitted. Please try again.';
+    }
   });
 </script>
